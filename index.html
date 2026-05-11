@@ -5,730 +5,470 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
 <title>Corporate Credit Risk — Senior Analyst Assessment</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet"/>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Source+Serif+4:wght@300;400;600&display=swap" rel="stylesheet"/>
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html { -webkit-text-size-adjust: 100%; }
-  body { background: #080e1a; font-family: 'Source Serif 4', Georgia, serif; color: #e8dcc8; min-height: 100vh; }
-  button { font-family: 'Source Serif 4', Georgia, serif; }
-  ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: #080e1a; } ::-webkit-scrollbar-thumb { background: #1e3050; border-radius: 3px; }
-  @keyframes fadeIn { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
-  @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.5; } }
-  .fade-in { animation: fadeIn 0.4s ease forwards; }
-  .timer-urgent { animation: pulse 1s ease infinite; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{background:#080e1a;font-family:'Source Serif 4',Georgia,serif;color:#e8dcc8;min-height:100vh}
+button{font-family:'Source Serif 4',Georgia,serif;cursor:pointer}
+input{font-family:'Source Serif 4',Georgia,serif}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:#080e1a}::-webkit-scrollbar-thumb{background:#1e3050;border-radius:3px}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.fade{animation:fadeIn 0.35s ease forwards}
+.urgent{animation:pulse 1s ease infinite}
+
+.screen{display:none;min-height:100vh;padding:32px 20px 80px}
+.screen.active{display:block}
+.center-screen{display:none;align-items:center;justify-content:center;min-height:100vh;padding:32px 20px}
+.center-screen.active{display:flex}
+.wrap{max-width:640px;width:100%;margin:0 auto}
+.wrap-lg{max-width:720px;width:100%;margin:0 auto}
+.card{background:#0d1825;border:1px solid #1a2e45;border-radius:14px;padding:22px}
+.card-sm{background:#0d1825;border:1px solid #1a2e45;border-radius:12px;padding:16px 18px}
+.btn-primary{background:linear-gradient(135deg,#1a5276,#2980b9);color:#fff;border:none;border-radius:10px;padding:15px 20px;font-size:14px;font-weight:600;letter-spacing:.06em;transition:opacity .15s}
+.btn-primary:disabled{opacity:.4;cursor:default}
+.btn-ghost{background:none;border:1px solid #1e3050;color:#607080;border-radius:10px;padding:12px 18px;font-size:13px}
+.btn-full{width:100%;display:block;text-align:center}
+.btn-upper{text-transform:uppercase;letter-spacing:.1em}
+
+/* INTRO */
+.stat-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:28px}
+.stat-box{background:#0d1825;border:1px solid #1a2e45;border-radius:12px;padding:18px 12px;text-align:center}
+.stat-val{font-family:‘Playfair Display’,serif;font-size:32px;color:#3a9bd5;font-weight:700}
+.stat-lbl{font-size:10px;color:#3a5060;letter-spacing:3px;text-transform:uppercase;margin-top:4px}
+.domain-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.domain-row{display:flex;align-items:center;gap:10px}
+.domain-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.domain-txt{color:#7a8c9a;font-size:13px;line-height:1.4}
+
+/* TOPBAR */
+#topbar{position:sticky;top:0;z-index:100;background:#04080f;border-bottom:1px solid #0f1e2e;padding:11px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.tb-left{display:flex;align-items:center;gap:14px;flex:1;min-width:0}
+#tb-qnum{color:#3a9bd5;font-size:12px;letter-spacing:2px;flex-shrink:0}
+#pb{flex:1;height:4px;background:#0f1e2e;border-radius:2px;overflow:hidden;max-width:200px}
+#pb-fill{height:100%;width:0%;background:linear-gradient(90deg,#3a9bd5,#27ae60);border-radius:2px;transition:width .3s}
+#tb-done{color:#1a4030;font-size:11px;flex-shrink:0}
+.tb-right{display:flex;align-items:center;gap:7px;flex-shrink:0}
+#tdot{width:7px;height:7px;border-radius:50%;background:#2ecc71;box-shadow:0 0 7px #2ecc71}
+#timer{color:#2ecc71;font-family:‘Courier New’,monospace;font-size:20px;font-weight:700;letter-spacing:2px}
+
+/* QUESTION */
+#q-card{border-radius:14px;padding:22px 20px;margin-bottom:20px;border-width:1px;border-style:solid}
+.q-header{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:14px}
+#q-sec{font-size:10px;letter-spacing:4px;text-transform:uppercase}
+#flag-btn{padding:4px 12px;border-radius:20px;font-size:11px;letter-spacing:1px;border-width:1px;border-style:solid;flex-shrink:0}
+#q-text{font-size:clamp(14px,2.5vw,16px);line-height:1.78;color:#e0d4c0}
+
+/* OPTIONS */
+#options{display:flex;flex-direction:column;gap:11px;margin-bottom:22px}
+.opt{display:flex;gap:14px;align-items:flex-start;border-radius:12px;padding:15px 18px;border:1px solid #162030;background:#0a1420;cursor:pointer;transition:border-color .15s,background .15s;-webkit-tap-highlight-color:transparent;user-select:none}
+.opt-lbl{width:26px;height:26px;border-radius:50%;border:1.5px solid #162030;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;font-weight:700;color:#6a8090}
+.opt-txt{font-size:clamp(13px,2.2vw,14px);line-height:1.68;padding-top:3px;color:#6a8090}
+
+/* EXPLANATION */
+#expl{display:none;border-radius:12px;padding:18px 20px;margin-bottom:20px;border-width:1px;border-style:solid}
+.expl-lbl{font-size:10px;letter-spacing:3px;text-transform:uppercase;margin-bottom:10px}
+#expl-txt{color:#7a8c9a;font-size:14px;line-height:1.82}
+
+/* ACTIONS */
+#actions{display:flex;gap:11px}
+#btn-skip{flex:1}
+#btn-confirm{flex:2}
+#btn-next{flex:1;display:none}
+
+/* NAVIGATOR */
+#nav-wrap{margin-top:36px;padding-top:24px;border-top:1px solid #0f1e2e}
+.nav-lbl{font-size:10px;letter-spacing:3px;color:#1e3040;text-transform:uppercase;margin-bottom:14px}
+#nav-btns{display:flex;flex-wrap:wrap;gap:7px}
+.nb{width:34px;height:34px;border-radius:7px;border:1px solid #0f1e2e;background:#0a1420;color:#2a4050;font-size:11px;font-weight:700}
+.nb.cur{border-color:#3a9bd5;background:#0f2942;color:#3a9bd5}
+.nb.ans{border-color:#27ae60;background:#0a2018;color:#27ae60}
+.nb.flg{border-color:#e67e22;background:#1e1000;color:#e67e22}
+#nav-legend{display:flex;flex-wrap:wrap;gap:16px;margin-top:12px}
+.nl{display:flex;align-items:center;gap:6px}
+.nl-d{width:9px;height:9px;border-radius:3px}
+.nl-t{color:#2a4050;font-size:11px}
+
+/* RESULTS */
+#r-score{font-family:‘Playfair Display’,serif;font-size:clamp(52px,12vw,80px);font-weight:700;line-height:1}
+#r-verdict{display:inline-block;padding:10px 28px;border-radius:40px;border:1px solid;font-size:14px;font-weight:700;letter-spacing:.06em;margin:12px 0 4px}
+#r-meta{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px}
+
+/* REVIEW */
+.rv-nav{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;gap:12px}
+#rv-opts{display:flex;flex-direction:column;gap:10px;margin-bottom:18px}
+.rvo{display:flex;gap:14px;align-items:flex-start;border-radius:11px;padding:14px 18px;border:1px solid}
+.rvo.ok{background:#0d3025;border-color:#27ae60}
+.rvo.bad{background:#2a0d0d;border-color:#e74c3c}
+.rvo.neu{background:#0d1825;border-color:#1a2e45}
+.rvo-lbl{width:24px;height:24px;border-radius:50%;border:1.5px solid;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;font-weight:700}
+.rvo.ok .rvo-lbl{border-color:#27ae60;color:#2ecc71}
+.rvo.bad .rvo-lbl{border-color:#e74c3c;color:#e74c3c}
+.rvo.neu .rvo-lbl{border-color:#1a2e45;color:#607080}
+.rvo-txt{font-size:14px;line-height:1.65;padding-top:1px}
+.rvo.ok .rvo-txt{color:#2ecc71}
+.rvo.bad .rvo-txt{color:#e74c3c}
+.rvo.neu .rvo-txt{color:#607080}
+#rv-mini{display:flex;flex-wrap:wrap;gap:7px;margin-top:28px}
+.rm{width:34px;height:34px;border-radius:7px;border:1px solid;font-size:11px;font-weight:700}
+.rm.cur{border-color:#3a9bd5;background:#0f2942;color:#3a9bd5}
+.rm.ok{border-color:#27ae60;background:#0a2018;color:#27ae60}
+.rm.bad{border-color:#e74c3c;background:#200a0a;color:#e74c3c}
+.rm.skip{border-color:#1a2e45;background:#0d1825;color:#3a5060}
 </style>
+
 </head>
 <body>
-<div id="root"></div>
-<script type="text/babel">
-const { useState, useEffect, useRef } = React;
 
-const TOTAL_MINUTES = 60;
+<!-- INTRO -->
 
-const questions = [
-{
-section: “Financial Statement Analysis”,
-q: “A corporate borrower reports EBITDA of $50M and net debt of $200M. Over the prior year, working capital increased by $15M while capex was $20M and D&A was $10M. Which metric most accurately reflects debt serviceability?”,
-options: [
-“Net Debt / EBITDA = 4.0x”,
-“Net Debt / (EBITDA – Capex) = 6.7x”,
-“Net Debt / Free Cash Flow to Firm = 5.7x (FCF = $35M)”,
-“Net Debt / (EBITDA – ΔWC – Capex) = 8.0x”
-],
-answer: 3,
-explanation: “True debt serviceability requires subtracting capex AND working capital build from EBITDA. FCF = EBITDA – Capex – ΔWC = $50M – $20M – $15M = $15M. Among the options, option D captures both cash drains, producing the most conservative and analytically complete serviceability ratio. Options A and B ignore working capital; Option C uses an incomplete FCF figure.”
-},
-{
-section: “Financial Statement Analysis”,
-q: “A manufacturing company shows strong net income growth for three consecutive years, yet operating cash flow is consistently 40% below net income. What is the most concerning interpretation for a credit analyst?”,
-options: [
-“The company is investing heavily in fixed assets, which is a positive growth signal”,
-“Aggressive revenue recognition or rising receivables may be inflating reported earnings”,
-“Depreciation is likely understated, reducing cash taxes paid”,
-“The company is efficiently managing its dividend payout ratio”
-],
-answer: 1,
-explanation: “A persistent and wide gap between net income and operating cash flow is a classic red flag for earnings quality issues — often indicating channel stuffing, aggressive revenue recognition, or deteriorating receivables collection. Fixed asset investment would appear in investing cash flows, not operating cash flows.”
-},
-{
-section: “Financial Statement Analysis”,
-q: “You are analyzing two companies in the same industry. Company A uses FIFO inventory accounting; Company B uses LIFO. Inflation is running at 6% annually. Which statement is most accurate for credit comparison?”,
-options: [
-“Company A’s gross margins are understated relative to Company B”,
-“Company B’s balance sheet inventory is closer to replacement cost”,
-“Company A’s reported profits and tax burden are higher, but its after-tax cash flow is comparatively lower”,
-“LIFO companies carry lower bankruptcy risk due to conservative asset valuation”
-],
-answer: 2,
-explanation: “Under inflation, FIFO assigns older (cheaper) costs to COGS, resulting in higher gross profit and higher taxes. Company A’s earnings appear stronger but after-tax cash flow is penalized by higher taxes — making Company B’s cash flow superior in inflationary environments despite lower reported profits. This is a critical distinction for a credit analyst assessing true cash generation.”
-},
-{
-section: “Financial Statement Analysis”,
-q: “A borrower’s interest coverage ratio (EBIT/Interest Expense) is 3.2x but its DSCR (Operating Cash Flow / Total Debt Service) is 0.85x. What does this divergence most likely indicate?”,
-options: [
-“The company has significant non-cash revenues boosting EBIT”,
-“High scheduled principal repayments are creating near-term liquidity stress despite adequate earnings”,
-“The interest coverage ratio is being manipulated through off-balance-sheet financing”,
-“Cash conversion cycle improvements are masking operational deterioration”
-],
-answer: 1,
-explanation: “DSCR below 1.0x means operating cash flow is insufficient to cover total debt service (principal + interest). An ICR of 3.2x only covers interest — it ignores principal repayments entirely. The gap reveals that while the company earns enough to service interest, the amortization schedule creates a genuine liquidity shortfall that could lead to refinancing risk or default.”
-},
-{
-section: “Credit Structuring & Covenants”,
-q: “A leveraged buyout target has Net Debt/EBITDA of 5.8x post-acquisition. As a senior secured lender, which covenant package best protects your position?”,
-options: [
-“A single maintenance covenant on minimum EBITDA tested annually”,
-“Incurrence-only covenants (no maintenance covenants) with a 350bps spread over SOFR”,
-“Maintenance covenants: Net Leverage ≤ 6.5x with 20% headroom, minimum liquidity of $25M, and capex restriction with carve-outs”,
-“A springing covenant triggered only upon revolving credit facility utilization above 35%”
-],
-answer: 2,
-explanation: “At 5.8x leverage, a senior secured lender needs active protection. Maintenance covenants tested regularly (not incurrence-only, which only test at time of action) with real headroom parameters, a liquidity floor, and capex discipline give early warning and cure periods. Springing covenants are weaker as they only activate conditionally. Higher spread (option B) compensates for risk but does not protect against deterioration.”
-},
-{
-section: “Credit Structuring & Covenants”,
-q: “Your bank is structuring a $150M revolving credit facility for a mid-market company. The CFO proposes excluding restructuring charges from EBITDA in covenant calculations. What is the primary risk of agreeing to broad EBITDA add-backs without limitation?”,
-options: [
-“It creates FX translation risk on reported earnings”,
-“It inflates covenant headroom, potentially masking true deterioration in credit quality and delaying remedial action”,
-“It reduces the company’s tax shield, increasing cash outflows”,
-“It triggers mandatory prepayment provisions under standard loan agreements”
-],
-answer: 1,
-explanation: “Uncapped EBITDA add-backs (restructuring, one-time charges, synergies) have become a major source of covenant erosion in leveraged lending. If EBITDA is inflated by large or recurring ‘one-time’ items, the company can appear covenant-compliant while fundamentals deteriorate — giving the bank no early warning and no legal basis for intervention.”
-},
-{
-section: “Credit Structuring & Covenants”,
-q: “A corporate borrower requests a $200M term loan with a 5-year bullet maturity. Their nearest bond maturity is $300M due in Year 4. What structural risk does this create, and what is the appropriate mitigation?”,
-options: [
-“Refinancing risk concentrated in Year 4–5; mitigate with a mandatory prepayment sweep if bond is not refinanced 12 months prior to maturity”,
-“Currency mismatch risk; mitigate with cross-currency swap overlay”,
-“Interest rate risk from the bullet structure; mitigate with a floating-to-fixed swap”,
-“Concentration risk; mitigate by syndicating to multiple lenders at inception”
-],
-answer: 0,
-explanation: “A $300M bond maturing one year before the term loan creates a maturity wall — if the bond cannot be refinanced, the company faces a liquidity crisis that directly threatens the term loan repayment. A covenant requiring early refinancing of the bond (with a mandatory prepayment trigger if not achieved 12 months before maturity) is the standard structural protection for this scenario.”
-},
-{
-section: “Credit Structuring & Covenants”,
-q: “Which of the following best describes a ‘covenant-lite’ loan and its implication for recovery in distress?”,
-options: [
-“A loan with only financial covenants but no negative pledge; recoveries are unaffected”,
-“A loan with minimal or no maintenance covenants, relying on incurrence tests; lenders lose early intervention rights and typically see worse outcomes in distress”,
-“A subordinated loan with PIK interest; subordination reduces but does not eliminate recovery”,
-“A loan with a springing leverage covenant that tightens as ratings decline”
-],
-answer: 1,
-explanation: “Covenant-lite loans lack maintenance covenants, meaning lenders cannot accelerate or renegotiate until a default actually occurs (typically payment default). By that point, collateral and enterprise value have often deteriorated significantly, leading to lower recovery rates compared to traditionally covenanted loans where banks can intervene early.”
-},
-{
-section: “Credit Risk & Ratings”,
-q: “A borrower’s Probability of Default (PD) is 2.5% and Loss Given Default (LGD) is 45%. The exposure is $80M. What is the Expected Loss, and how should it be interpreted for provisioning?”,
-options: [
-“EL = $900K; this represents the maximum loss the bank should reserve against”,
-“EL = $900K; this is the statistical mean loss and forms the basis for credit provisioning under IFRS 9 / ECL frameworks”,
-“EL = $2M; this represents the stressed loss under a 1-in-10 scenario”,
-“EL = $36M; this represents the full LGD-adjusted exposure for capital purposes”
-],
-answer: 1,
-explanation: “EL = PD × LGD × EAD = 2.5% × 45% × $80M = $900K. Under IFRS 9, Expected Credit Loss (ECL) provisions are based on this statistical mean loss concept across Stage 1/2/3 buckets. It is not a maximum loss — unexpected losses above EL are covered by economic capital, not provisions.”
-},
-{
-section: “Credit Risk & Ratings”,
-q: “Two companies have identical leverage ratios, margins, and industry classifications. Company A generates 80% of revenue from 3 long-term contracted customers; Company B serves 200+ customers with no single customer >3% of revenue. How should a credit analyst adjust their assessment?”,
-options: [
-“Company A should be rated higher due to revenue predictability from contracted cashflows”,
-“Company B should be rated higher due to diversification reducing concentration risk”,
-“A nuanced assessment is required: Company A’s concentration risk warrants a notch penalty despite revenue stability, while Company B’s diversification reduces idiosyncratic risk but may indicate lack of pricing power”,
-“Both companies should receive identical ratings as financial metrics are equivalent”
-],
-answer: 2,
-explanation: “This tests qualitative judgment. Company A’s contracted revenue is valuable but 3-customer concentration is a binary risk — losing one customer equals a material revenue cliff. Company B’s diversification is structurally safer but may suggest commoditized offerings. A skilled analyst notches the rating for concentration without ignoring the cashflow quality that contracts provide.”
-},
-{
-section: “Credit Risk & Ratings”,
-q: “A corporate credit rating is on CreditWatch Negative by S&P following an acquisition announcement. Which scenario would most likely result in the rating being CONFIRMED (not downgraded) despite the acquisition?”,
-options: [
-“The acquisition is funded 100% with new equity issuance, with pro-forma leverage below pre-deal levels”,
-“Management commits publicly to rapid deleveraging within 24 months”,
-“The target has an investment-grade rating from Moody’s”,
-“The acquisition is structured as a stock-for-stock merger at no premium”
-],
-answer: 0,
-explanation: “A rating is typically confirmed when the acquisition does not impair the credit profile. All-equity funding that keeps leverage below pre-deal levels means no additional debt burden — this is the clearest basis for affirming the rating. Public commitments to deleverage (option B) are considered but not definitive without structural support from the deal financing itself.”
-},
-{
-section: “Credit Risk & Ratings”,
-q: “Under Basel III, which correctly describes the CET1 capital requirements including the conservation buffer?”,
-options: [
-“CAR = Total Capital / Total Assets ≥ 8%; Tier 1 must be at least 4% of RWA”,
-“CAR = Tier 1 Capital / RWA ≥ 6%; with the capital conservation buffer, effective minimum is 8.5% CET1”,
-“Minimum CET1 = 4.5% of RWA; adding the 2.5% capital conservation buffer gives an effective CET1 floor of 7%”,
-“CAR = Total Capital / RWA ≥ 10.5%; Tier 2 capital may not exceed Tier 1”
-],
-answer: 2,
-explanation: “Under Basel III: minimum CET1 = 4.5%, Tier 1 = 6%, Total Capital = 8% of RWA. The 2.5% Capital Conservation Buffer adds on top → effective CET1 floor = 7%, Tier 1 = 8.5%, Total Capital = 10.5%. Option C correctly states the core mechanics. Banks that breach the buffer face restrictions on dividends and discretionary bonuses.”
-},
-{
-section: “Industry & Business Risk”,
-q: “You are assessing a mid-sized airline’s credit profile. EBITDA margins have improved to 18% from 12% in the prior year. Which factor should MOST temper your optimism about this improvement?”,
-options: [
-“Airlines typically have high fixed costs meaning margins are volatile with load factor changes”,
-“The improvement may reflect a one-time hedging gain on fuel, which is non-recurring”,
-“EBITDA excludes aircraft lease costs (IFRS 16 ROU assets), which are a core operational expense — EBITDAR is the appropriate metric for airlines”,
-“Airline margins are cyclical and 18% is unsustainable across a full economic cycle”
-],
-answer: 2,
-explanation: “For airlines, EBITDA is distorted because aircraft leases are capitalized under IFRS 16 but represent genuine recurring operating costs. EBITDAR (adding back lease/rent costs) is the industry-standard metric. Comparing EBITDA across airlines with different lease vs. owned fleet compositions produces misleading conclusions — this is a technical precision point that separates experienced analysts.”
-},
-{
-section: “Industry & Business Risk”,
-q: “A retail conglomerate has strong EBITDA but faces a structural shift as e-commerce penetration in its core segment rises from 15% to 38% over 4 years. The company has not materially invested in digital capabilities. How should this affect your credit analysis?”,
-options: [
-“It is a non-financial risk and should not affect the quantitative credit model”,
-“It should trigger a negative qualitative overlay reducing the business risk assessment, potentially warranting a rating floor review and shorter tenor limits”,
-“The risk is priced in by the market; the credit spread reflects the structural disruption adequately”,
-“The company should be placed on credit watch only after EBITDA declines materially”
-],
-answer: 1,
-explanation: “Structural disruption is a forward-looking risk that experienced credit analysts must embed in ratings today — not after the financial damage materializes. A qualitative overlay on business risk, combined with tenor limits (avoiding long-dated exposure to deteriorating franchises), is the prudent response. Waiting for EBITDA decline is reactive and is the most common mistake of weaker analysts.”
-},
-{
-section: “Industry & Business Risk”,
-q: “You are comparing two issuers in the same sector: one with 70% fixed-rate debt and one with 70% floating-rate debt. The central bank has just begun an aggressive tightening cycle (250bps over 12 months). Which credit impact is most direct and immediate?”,
-options: [
-“The fixed-rate borrower faces mark-to-market losses on its debt portfolio”,
-“The floating-rate borrower faces immediate increases in interest expense, reducing ICR and DSCR within the current reporting period”,
-“Both issuers are equally affected as lenders reprice credit spreads uniformly”,
-“The floating-rate borrower benefits from higher rates as it can reinvest at higher yields”
-],
-answer: 1,
-explanation: “Floating-rate debt reprices with the benchmark rate immediately. A 250bps tightening cycle directly and immediately increases interest expense for the floating-rate borrower, compressing ICR and DSCR in real time. The fixed-rate borrower is insulated until maturity or refinancing. Mark-to-market losses (option A) are an accounting concept, not a cash flow impact.”
-},
-{
-section: “Problem Solving & Judgment”,
-q: “A well-regarded corporate client (BB+ rated, 8-year relationship) requests a waiver of a net leverage covenant breach (current: 4.9x vs. 4.5x limit). They cite a one-time acquisition cost. Operating performance is otherwise on track. What is the most appropriate bank response?”,
-options: [
-“Grant the waiver immediately given the strong relationship and minor breach”,
-“Decline the waiver and accelerate the facility to protect the bank’s position”,
-“Grant a time-limited waiver with a covenant reset, waiver fee, enhanced reporting requirements, and conduct a full credit review of the acquisition’s impact”,
-“Reclassify the facility to non-performing and provision at 100% LGD”
-],
-answer: 2,
-explanation: “A covenant breach — even minor — is a meaningful credit event. The appropriate response balances relationship management with credit discipline: a time-limited waiver (not permanent reset), a fee (compensation and signal of materiality), enhanced reporting (early warning system), and a substantive credit review. Immediate acceleration is disproportionate; a free waiver undermines covenant integrity and sets a poor precedent.”
-},
-{
-section: “Problem Solving & Judgment”,
-q: “During due diligence, you discover that 35% of a borrower’s receivables are >120 days overdue from three related-party entities. The CFO explains these as ‘timing differences.’ What action is most appropriate?”,
-options: [
-“Accept the CFO’s explanation and proceed, noting it in the credit memo as a risk flag”,
-“Require independent verification of the related-party receivables, treat them as potentially uncollectible in the base case, and escalate to the credit committee with conditions”,
-“Adjust receivables days to 90 and reduce the facility limit by 15% as a risk buffer”,
-“Request a management representation letter confirming the receivables are collectible and proceed on that basis”
-],
-answer: 1,
-explanation: “Related-party receivables that are materially overdue are a significant fraud/misrepresentation risk. ‘Timing differences’ is a classic deflection. Best practice requires: (1) independent verification — not management representations, (2) conservative base-case treatment assuming uncollectibility, and (3) escalation to the credit committee. Management rep letters do not protect the bank in fraud scenarios.”
-},
-{
-section: “Problem Solving & Judgment”,
-q: “A borrower’s net debt has remained stable at $500M over 3 years, but the composition has shifted from 80% bank debt / 20% bonds to 30% bank debt / 70% bonds. What is the primary credit implication for your bank?”,
-options: [
-“The shift is neutral; total debt is unchanged and the borrower’s leverage is the same”,
-“The bank’s relative seniority has improved as it now holds a smaller share of the capital structure”,
-“The bank’s negotiating leverage in a distress scenario has weakened — a larger bondholder base makes restructuring more complex, creating holdout risk”,
-“Bond market access is a positive refinancing signal indicating improved credit quality”
-],
-answer: 2,
-explanation: “With 70% of debt in bonds, any restructuring now involves a diverse, often adversarial bondholder group (hedge funds, distressed investors) that may resist haircuts or hold out for better terms. The bank’s ability to quickly negotiate a bilateral solution is significantly diminished. While bond market access is positive, the structural complexity in distress is the material credit concern here.”
-},
-{
-section: “Problem Solving & Judgment”,
-q: “Your quantitative model outputs a PD of 1.8% (equivalent to BB+), but your qualitative assessment identifies significant governance concerns: recent CFO departure, board composition issues, and an ongoing regulatory inquiry. What is the most defensible credit committee recommendation?”,
-options: [
-“Approve at model-indicated terms; qualitative concerns are subjective and not scoreable”,
-“Decline the facility entirely until the regulatory inquiry is resolved”,
-“Apply a qualitative overlay adjusting the effective rating to BB or lower, reflect this in pricing and structure, and present both views transparently to the committee with enhanced monitoring conditions”,
-“Approve the facility but exclude governance concerns from the credit memo to avoid introducing subjectivity”
-],
-answer: 2,
-explanation: “Governance risk is a legitimate, material credit factor — not merely subjective. Best practice requires a transparent qualitative overlay adjusting the model output, adequate pricing for incremental risk, structural protections (enhanced reporting, possible KPI covenants), and full disclosure to the committee. Excluding governance from the memo would be a professional and compliance failure — and potentially a regulatory one.”
-},
-{
-section: “Advanced & Integrative”,
-q: “A company has EBITDA of $80M and total funded debt of $300M (60% fixed, 40% floating at SOFR+200bps). Current interest expense is $12M. SOFR rises 150bps. Approximately what is the revised interest coverage ratio?”,
-options: [
-“ICR unchanged at 6.7x; fixed-rate majority buffers the full impact”,
-“New interest = $12M + ($300M × 40% × 1.5%) = $13.8M; revised ICR = 5.8x”,
-“New interest = $12M × 1.015 = $12.18M; revised ICR = 6.6x”,
-“New interest = $12M + ($300M × 1.5%) = $16.5M; revised ICR = 4.8x”
-],
-answer: 1,
-explanation: “Only the floating-rate portion reprices: $300M × 40% = $120M floating. At +150bps: $120M × 1.5% = $1.8M additional interest. New total interest = $12M + $1.8M = $13.8M. Revised ICR = $80M / $13.8M = 5.8x. Option D incorrectly applies the rate move to total debt; Option C applies a growth factor to the entire existing expense rather than isolating the floating tranche.”
-},
-{
-section: “Advanced & Integrative”,
-q: “RAROC for a proposed credit facility is 8.2% against the bank’s hurdle rate of 11%. The relationship team argues cross-sell revenue from FX hedging and cash management would take RAROC to 12.5%. What is the most rigorous response?”,
-options: [
-“Approve on total relationship RAROC of 12.5%; cross-sell is standard relationship banking practice”,
-“Decline as standalone credit RAROC is below hurdle rate”,
-“Require cross-sell revenue to be historically evidenced or contractually committed before inclusion; present both standalone and relationship RAROC transparently to the committee”,
-“Increase the facility price by 30bps to bring standalone RAROC to hurdle and approve”
-],
-answer: 2,
-explanation: “Relationship RAROC is a legitimate concept, but cross-sell revenues are often optimistic projections that never materialize. Best practice: include cross-sell only if historically evidenced from this client or comparable relationships, or contractually committed. Both scenarios must be presented to the credit committee transparently. Approving on speculative cross-sell revenues that fail to materialize leaves the bank holding a loss-making credit.”
-},
-{
-section: “Advanced & Integrative”,
-q: “A portfolio review shows 15% of your corporate credit book concentrated in a single cyclical sector now showing early stress signals (rising DSOs, margin compression, covenant headroom declining across names). Which portfolio-level action is most appropriate?”,
-options: [
-“Immediately provision 50% of the sector exposure as a precautionary measure”,
-“Take no action until individual borrowers breach covenants or request waivers”,
-“Conduct a sector-wide stress test, flag exposures with <15% covenant headroom for enhanced monitoring, review sector concentration limits, and adjust pricing on renewals”,
-“Transfer all sector exposure to the trading book and hedge with CDS”
-],
-answer: 2,
-explanation: “Portfolio management requires proactive, systematic action — not waiting for individual defaults. A sector stress test identifies vulnerabilities before they materialize. Enhanced monitoring on thin-headroom credits provides early warning. Sector limit reviews prevent further concentration buildup. Repricing renewals ensures new commitments reflect current risk. CDS hedging (option D) is expensive and often unavailable for mid-market corporate names.”
-}
+<div id="s-intro" class="center-screen active">
+  <div class="wrap fade">
+    <div style="text-align:center;margin-bottom:36px">
+      <h1 style="font-family:'Playfair Display',serif;font-size:clamp(24px,5vw,40px);color:#e8dcc8;font-weight:700;line-height:1.2">
+        Corporate Credit Risk<br/>Analyst Assessment
+      </h1>
+    </div>
+    <div class="stat-grid">
+      <div class="stat-box"><div class="stat-val">22</div><div class="stat-lbl">Questions</div></div>
+      <div class="stat-box"><div class="stat-val">60</div><div class="stat-lbl">Minutes</div></div>
+      <div class="stat-box"><div class="stat-val">6</div><div class="stat-lbl">Domains</div></div>
+    </div>
+    <div class="card" style="margin-bottom:20px">
+      <div style="font-size:10px;letter-spacing:4px;color:#4a90a4;text-transform:uppercase;margin-bottom:16px">Domains</div>
+      <div class="domain-grid" id="domain-grid"></div>
+    </div>
+    <div class="card" style="background:#070d18;border-color:#111e30;margin-bottom:20px">
+      <div style="font-size:10px;letter-spacing:4px;color:#4a90a4;text-transform:uppercase;margin-bottom:14px">Candidate Details</div>
+      <input id="cname" type="text" placeholder="Full name (optional)" style="width:100%;background:#0d1825;border:1px solid #1a2e45;border-radius:8px;padding:12px 16px;color:#e8dcc8;font-size:14px;outline:none"/>
+    </div>
+    <div style="background:#07111e;border:1px solid #0f2035;border-radius:10px;padding:13px 18px;margin-bottom:24px;color:#4a6070;font-size:13px;line-height:1.65">
+      <strong style="color:#4a90a4">Instructions: </strong>Select the single best answer and confirm before the explanation appears. Flag questions to revisit. The test auto-submits when time expires.
+    </div>
+    <button id="btn-start" class="btn-primary btn-full btn-upper" style="padding:17px;font-size:15px">Begin Assessment</button>
+  </div>
+</div>
+
+<!-- TEST -->
+
+<div id="s-test" class="screen">
+  <div id="topbar">
+    <div class="tb-left">
+      <div id="tb-qnum">Q<span id="tb-n">1</span><span style="color:#1a3040">/22</span></div>
+      <div id="pb"><div id="pb-fill"></div></div>
+      <div id="tb-done">0 done</div>
+    </div>
+    <div class="tb-right">
+      <div id="tdot"></div>
+      <div id="timer">60:00</div>
+    </div>
+  </div>
+  <div class="wrap-lg" style="padding:28px 18px 80px">
+    <div id="q-card" class="fade">
+      <div class="q-header">
+        <div id="q-sec"></div>
+        <button id="flag-btn" onclick="toggleFlag()">&#9872; Flag</button>
+      </div>
+      <p id="q-text"></p>
+    </div>
+    <div id="options"></div>
+    <div id="expl">
+      <div class="expl-lbl" id="expl-lbl"></div>
+      <p id="expl-txt"></p>
+    </div>
+    <div id="actions">
+      <button id="btn-skip" class="btn-ghost" onclick="skipQ()">Skip &#8594;</button>
+      <button id="btn-confirm" class="btn-primary btn-upper" onclick="confirmAns()" disabled>Confirm Answer</button>
+      <button id="btn-next" class="btn-primary btn-upper" onclick="nextQ()">Next &#8594;</button>
+    </div>
+    <div id="nav-wrap">
+      <div class="nav-lbl">Navigator</div>
+      <div id="nav-btns"></div>
+      <div id="nav-legend">
+        <div class="nl"><div class="nl-d" style="background:#27ae60"></div><div class="nl-t">Answered</div></div>
+        <div class="nl"><div class="nl-d" style="background:#e67e22"></div><div class="nl-t">Flagged</div></div>
+        <div class="nl"><div class="nl-d" style="background:#3a9bd5"></div><div class="nl-t">Current</div></div>
+        <div class="nl"><div class="nl-d" style="background:#0f1e2e"></div><div class="nl-t">Unanswered</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- RESULTS -->
+
+<div id="s-results" class="screen">
+  <div class="wrap" style="padding-top:8px">
+    <div style="text-align:center;margin-bottom:36px" class="fade">
+      <div style="font-size:10px;letter-spacing:6px;color:#4a90a4;text-transform:uppercase;margin-bottom:14px">Assessment Complete</div>
+      <div id="r-name" style="font-size:13px;color:#5a7080;margin-bottom:6px"></div>
+      <div id="r-score"></div>
+      <div id="r-out" style="color:#5a7080;font-size:14px;margin:6px 0 14px"></div>
+      <div id="r-verdict"></div>
+      <p id="r-detail" style="color:#506070;font-size:13px;max-width:440px;margin:10px auto 0;line-height:1.65"></p>
+    </div>
+    <div class="card" style="margin-bottom:20px">
+      <div style="font-size:10px;letter-spacing:4px;color:#4a90a4;text-transform:uppercase;margin-bottom:22px">Performance by Domain</div>
+      <div id="r-bars"></div>
+    </div>
+    <div id="r-meta">
+      <div class="card-sm"><div style="font-size:10px;letter-spacing:3px;color:#3a5060;text-transform:uppercase;margin-bottom:6px">Time Used</div><div id="r-time" style="font-family:'Playfair Display',serif;font-size:24px;color:#e8dcc8"></div></div>
+      <div class="card-sm"><div style="font-size:10px;letter-spacing:3px;color:#3a5060;text-transform:uppercase;margin-bottom:6px">Unanswered</div><div id="r-unanswered" style="font-family:'Playfair Display',serif;font-size:24px;color:#e8dcc8"></div></div>
+    </div>
+    <button class="btn-ghost btn-full btn-upper" onclick="goReview()" style="padding:15px;font-size:14px">Review All Answers &amp; Explanations</button>
+  </div>
+</div>
+
+<!-- REVIEW -->
+
+<div id="s-review" class="screen">
+  <div class="wrap-lg">
+    <div class="rv-nav">
+      <button class="btn-ghost" onclick="showResults()" style="padding:9px 16px;font-size:13px">&#8592; Results</button>
+      <span id="rv-pos" style="color:#3a5060;font-size:13px;flex-shrink:0"></span>
+      <div style="display:flex;gap:8px">
+        <button id="rv-prev" class="btn-ghost" onclick="rvPrev()" style="width:38px;height:38px;padding:0;font-size:18px">&#8249;</button>
+        <button id="rv-nxt" class="btn-ghost" onclick="rvNext()" style="width:38px;height:38px;padding:0;font-size:18px">&#8250;</button>
+      </div>
+    </div>
+    <div id="rv-qcard" style="border-radius:14px;padding:22px;margin-bottom:18px;border-width:1px;border-style:solid" class="fade">
+      <div id="rv-sec" style="font-size:10px;letter-spacing:4px;text-transform:uppercase;margin-bottom:12px"></div>
+      <p id="rv-q" style="color:#e8dcc8;font-size:15px;line-height:1.75"></p>
+    </div>
+    <div id="rv-opts"></div>
+    <div id="rv-skip-note" style="display:none;background:#181200;border:1px solid #3a2800;border-radius:8px;padding:11px 16px;margin-bottom:14px;color:#a07800;font-size:13px">&#9888; This question was not answered.</div>
+    <div id="rv-expl" style="border-radius:12px;padding:18px 20px">
+      <div id="rv-expl-lbl" style="font-size:10px;letter-spacing:3px;text-transform:uppercase;margin-bottom:10px"></div>
+      <p id="rv-expl-txt" style="color:#7a8c9a;font-size:14px;line-height:1.8"></p>
+    </div>
+    <div id="rv-mini"></div>
+  </div>
+</div>
+
+<script>
+var SC={
+  "Financial Statement Analysis":{bg:"#0b1e33",ac:"#3a9bd5"},
+  "Credit Structuring & Covenants":{bg:"#1e0d1a",ac:"#e94580"},
+  "Credit Risk & Ratings":{bg:"#0a2418",ac:"#27ae60"},
+  "Industry & Business Risk":{bg:"#1e1200",ac:"#e67e22"},
+  "Problem Solving & Judgment":{bg:"#120a20",ac:"#a569bd"},
+  "Advanced & Integrative":{bg:"#061a18",ac:"#1abc9c"}
+};
+var LB=["A","B","C","D"];
+var QS=[
+  {s:"Financial Statement Analysis",q:"A corporate borrower reports EBITDA of $50M and net debt of $200M. Over the prior year, working capital increased by $15M while capex was $20M and D&A was $10M. Which metric most accurately reflects debt serviceability?",o:["Net Debt / EBITDA = 4.0x","Net Debt / (EBITDA \u2013 Capex) = 6.7x","Net Debt / Free Cash Flow to Firm = 5.7x (FCF = $35M)","Net Debt / (EBITDA \u2013 \u0394WC \u2013 Capex) = 8.0x"],a:3,e:"True debt serviceability requires subtracting capex AND working capital build from EBITDA. FCF = EBITDA \u2013 Capex \u2013 \u0394WC = $50M \u2013 $20M \u2013 $15M = $15M. Option D captures both cash drains, producing the most conservative and analytically complete serviceability ratio."},
+  {s:"Financial Statement Analysis",q:"A manufacturing company shows strong net income growth for three consecutive years, yet operating cash flow is consistently 40% below net income. What is the most concerning interpretation for a credit analyst?",o:["The company is investing heavily in fixed assets, which is a positive growth signal","Aggressive revenue recognition or rising receivables may be inflating reported earnings","Depreciation is likely understated, reducing cash taxes paid","The company is efficiently managing its dividend payout ratio"],a:1,e:"A persistent gap between net income and operating cash flow is a classic red flag for earnings quality issues \u2014 often indicating channel stuffing, aggressive revenue recognition, or deteriorating receivables collection. Fixed asset investment would appear in investing cash flows, not operating."},
+  {s:"Financial Statement Analysis",q:"You are analyzing two companies in the same industry. Company A uses FIFO inventory accounting; Company B uses LIFO. Inflation is running at 6% annually. Which statement is most accurate for credit comparison?",o:["Company A\u2019s gross margins are understated relative to Company B","Company B\u2019s balance sheet inventory is closer to replacement cost","Company A\u2019s reported profits and tax burden are higher, but its after-tax cash flow is comparatively lower","LIFO companies carry lower bankruptcy risk due to conservative asset valuation"],a:2,e:"Under inflation, FIFO assigns older (cheaper) costs to COGS, resulting in higher gross profit and higher taxes. Company A\u2019s earnings appear stronger but after-tax cash flow is penalized by higher taxes \u2014 making Company B\u2019s cash flow superior in inflationary environments despite lower reported profits."},
+  {s:"Financial Statement Analysis",q:"A borrower\u2019s interest coverage ratio (EBIT/Interest Expense) is 3.2x but its DSCR (Operating Cash Flow / Total Debt Service) is 0.85x. What does this divergence most likely indicate?",o:["The company has significant non-cash revenues boosting EBIT","High scheduled principal repayments are creating near-term liquidity stress despite adequate earnings","The interest coverage ratio is being manipulated through off-balance-sheet financing","Cash conversion cycle improvements are masking operational deterioration"],a:1,e:"DSCR below 1.0x means operating cash flow is insufficient to cover total debt service. An ICR of 3.2x only covers interest \u2014 it ignores principal repayments. The gap reveals a genuine liquidity shortfall that could lead to refinancing risk or default."},
+  {s:"Credit Structuring & Covenants",q:"A leveraged buyout target has Net Debt/EBITDA of 5.8x post-acquisition. As a senior secured lender, which covenant package best protects your position?",o:["A single maintenance covenant on minimum EBITDA tested annually","Incurrence-only covenants (no maintenance covenants) with a 350bps spread over SOFR","Maintenance covenants: Net Leverage \u22646.5x with 20% headroom, minimum liquidity of $25M, and capex restriction with carve-outs","A springing covenant triggered only upon revolving credit facility utilization above 35%"],a:2,e:"At 5.8x leverage, a senior secured lender needs active protection. Maintenance covenants tested regularly with real headroom parameters, a liquidity floor, and capex discipline give early warning and cure periods. Springing covenants only activate conditionally."},
+  {s:"Credit Structuring & Covenants",q:"Your bank is structuring a $150M revolving credit facility for a mid-market company. The CFO proposes excluding restructuring charges from EBITDA in covenant calculations. What is the primary risk of agreeing to broad EBITDA add-backs without limitation?",o:["It creates FX translation risk on reported earnings","It inflates covenant headroom, potentially masking true deterioration in credit quality and delaying remedial action","It reduces the company\u2019s tax shield, increasing cash outflows","It triggers mandatory prepayment provisions under standard loan agreements"],a:1,e:"Uncapped EBITDA add-backs have become a major source of covenant erosion in leveraged lending. If EBITDA is inflated by recurring \u2018one-time\u2019 items, the company can appear covenant-compliant while fundamentals deteriorate \u2014 giving the bank no early warning or legal basis for intervention."},
+  {s:"Credit Structuring & Covenants",q:"A corporate borrower requests a $200M term loan with a 5-year bullet maturity. Their nearest bond maturity is $300M due in Year 4. What structural risk does this create, and what is the appropriate mitigation?",o:["Refinancing risk concentrated in Year 4\u20135; mitigate with a mandatory prepayment sweep if bond is not refinanced 12 months prior to maturity","Currency mismatch risk; mitigate with cross-currency swap overlay","Interest rate risk from the bullet structure; mitigate with a floating-to-fixed swap","Concentration risk; mitigate by syndicating to multiple lenders at inception"],a:0,e:"A $300M bond maturing one year before the term loan creates a maturity wall. If the bond cannot be refinanced, the company faces a liquidity crisis threatening term loan repayment. A mandatory prepayment trigger if the bond is not refinanced 12 months before maturity is the standard structural protection."},
+  {s:"Credit Structuring & Covenants",q:"Which of the following best describes a \u2018covenant-lite\u2019 loan and its implication for recovery in distress?",o:["A loan with only financial covenants but no negative pledge; recoveries are unaffected","A loan with minimal or no maintenance covenants, relying on incurrence tests; lenders lose early intervention rights and typically see worse outcomes in distress","A subordinated loan with PIK interest; subordination reduces but does not eliminate recovery","A loan with a springing leverage covenant that tightens as ratings decline"],a:1,e:"Covenant-lite loans lack maintenance covenants, meaning lenders cannot accelerate or renegotiate until a default actually occurs. By that point, collateral and enterprise value have often deteriorated, leading to lower recovery rates versus traditionally covenanted loans."},
+  {s:"Credit Risk & Ratings",q:"A borrower\u2019s Probability of Default (PD) is 2.5% and Loss Given Default (LGD) is 45%. The exposure is $80M. What is the Expected Loss, and how should it be interpreted for provisioning?",o:["EL = $900K; this represents the maximum loss the bank should reserve against","EL = $900K; this is the statistical mean loss and forms the basis for credit provisioning under IFRS 9 / ECL frameworks","EL = $2M; this represents the stressed loss under a 1-in-10 scenario","EL = $36M; this represents the full LGD-adjusted exposure for capital purposes"],a:1,e:"EL = PD \u00d7 LGD \u00d7 EAD = 2.5% \u00d7 45% \u00d7 $80M = $900K. Under IFRS 9, ECL provisions are based on this statistical mean loss concept. It is not a maximum loss \u2014 unexpected losses above EL are covered by economic capital, not provisions."},
+  {s:"Credit Risk & Ratings",q:"Two companies have identical leverage ratios, margins, and industry classifications. Company A generates 80% of revenue from 3 long-term contracted customers; Company B serves 200+ customers with no single customer >3% of revenue. How should a credit analyst adjust their assessment?",o:["Company A should be rated higher due to revenue predictability from contracted cashflows","Company B should be rated higher due to diversification reducing concentration risk","A nuanced assessment is required: Company A\u2019s concentration risk warrants a notch penalty despite revenue stability, while Company B\u2019s diversification reduces idiosyncratic risk but may indicate lack of pricing power","Both companies should receive identical ratings as financial metrics are equivalent"],a:2,e:"Company A\u2019s contracted revenue is valuable but 3-customer concentration is a binary risk. Company B\u2019s diversification is structurally safer but may suggest commoditized offerings. A skilled analyst notches the rating for concentration without ignoring the cashflow quality that contracts provide."},
+  {s:"Credit Risk & Ratings",q:"A corporate credit rating is on CreditWatch Negative by S&P following an acquisition announcement. Which scenario would most likely result in the rating being CONFIRMED (not downgraded)?",o:["The acquisition is funded 100% with new equity issuance, with pro-forma leverage below pre-deal levels","Management commits publicly to rapid deleveraging within 24 months","The target has an investment-grade rating from Moody\u2019s","The acquisition is structured as a stock-for-stock merger at no premium"],a:0,e:"A rating is typically confirmed when the acquisition does not impair the credit profile. All-equity funding keeping leverage below pre-deal levels means no additional debt burden \u2014 the clearest basis for affirming the rating. Public deleverage commitments are considered but not definitive without structural support."},
+  {s:"Credit Risk & Ratings",q:"Under Basel III, which correctly describes the CET1 capital requirements including the conservation buffer?",o:["CAR = Total Capital / Total Assets \u22658%; Tier 1 must be at least 4% of RWA","CAR = Tier 1 Capital / RWA \u22656%; with the conservation buffer, effective minimum is 8.5% CET1","Minimum CET1 = 4.5% of RWA; adding the 2.5% capital conservation buffer gives an effective CET1 floor of 7%","CAR = Total Capital / RWA \u226510.5%; Tier 2 capital may not exceed Tier 1"],a:2,e:"Under Basel III: minimum CET1 = 4.5%, Tier 1 = 6%, Total Capital = 8% of RWA. The 2.5% Capital Conservation Buffer adds on top, giving an effective CET1 floor of 7%, Tier 1 = 8.5%, Total Capital = 10.5%."},
+  {s:"Industry & Business Risk",q:"You are assessing a mid-sized airline\u2019s credit profile. EBITDA margins have improved to 18% from 12% in the prior year. Which factor should MOST temper your optimism?",o:["Airlines typically have high fixed costs meaning margins are volatile with load factor changes","The improvement may reflect a one-time hedging gain on fuel, which is non-recurring","EBITDA excludes aircraft lease costs (IFRS 16 ROU assets), which are a core operational expense \u2014 EBITDAR is the appropriate metric for airlines","Airline margins are cyclical and 18% is unsustainable across a full economic cycle"],a:2,e:"For airlines, EBITDA is distorted because aircraft leases are capitalized under IFRS 16 but represent genuine recurring operating costs. EBITDAR is the industry-standard metric. Comparing EBITDA across airlines with different lease vs. owned fleets produces misleading conclusions."},
+  {s:"Industry & Business Risk",q:"A retail conglomerate has strong EBITDA but faces a structural shift as e-commerce penetration in its core segment rises from 15% to 38% over 4 years. The company has not materially invested in digital capabilities. How should this affect your credit analysis?",o:["It is a non-financial risk and should not affect the quantitative credit model","It should trigger a negative qualitative overlay reducing the business risk assessment, potentially warranting a rating floor review and shorter tenor limits","The risk is priced in by the market; the credit spread reflects the structural disruption adequately","The company should be placed on credit watch only after EBITDA declines materially"],a:1,e:"Structural disruption is a forward-looking risk that must be embedded in ratings today. A qualitative overlay combined with tenor limits is the prudent response. Waiting for EBITDA decline is reactive and the most common mistake of weaker analysts."},
+  {s:"Industry & Business Risk",q:"You are comparing two issuers: one with 70% fixed-rate debt and one with 70% floating-rate debt. The central bank has begun an aggressive tightening cycle (250bps over 12 months). Which credit impact is most direct and immediate?",o:["The fixed-rate borrower faces mark-to-market losses on its debt portfolio","The floating-rate borrower faces immediate increases in interest expense, reducing ICR and DSCR within the current reporting period","Both issuers are equally affected as lenders reprice credit spreads uniformly","The floating-rate borrower benefits from higher rates as it can reinvest at higher yields"],a:1,e:"Floating-rate debt reprices immediately. A 250bps tightening cycle directly increases interest expense for the floating-rate borrower, compressing ICR and DSCR in real time. The fixed-rate borrower is insulated until maturity or refinancing."},
+  {s:"Problem Solving & Judgment",q:"A well-regarded corporate client (BB+ rated, 8-year relationship) requests a waiver of a net leverage covenant breach (current: 4.9x vs. 4.5x limit). They cite a one-time acquisition cost. Operating performance is otherwise on track. What is the most appropriate bank response?",o:["Grant the waiver immediately given the strong relationship and minor breach","Decline the waiver and accelerate the facility to protect the bank\u2019s position","Grant a time-limited waiver with a covenant reset, waiver fee, enhanced reporting requirements, and conduct a full credit review of the acquisition\u2019s impact","Reclassify the facility to non-performing and provision at 100% LGD"],a:2,e:"A covenant breach is a meaningful credit event. The appropriate response balances relationship management with credit discipline: a time-limited waiver, a fee, enhanced reporting, and a substantive credit review. Immediate acceleration is disproportionate; a free waiver undermines covenant integrity."},
+  {s:"Problem Solving & Judgment",q:"During due diligence, you discover that 35% of a borrower\u2019s receivables are >120 days overdue from three related-party entities. The CFO explains these as \u2018timing differences.\u2019 What action is most appropriate?",o:["Accept the CFO\u2019s explanation and proceed, noting it in the credit memo as a risk flag","Require independent verification of the related-party receivables, treat them as potentially uncollectible in the base case, and escalate to the credit committee with conditions","Adjust receivables days to 90 and reduce the facility limit by 15% as a risk buffer","Request a management representation letter confirming the receivables are collectible and proceed on that basis"],a:1,e:"Related-party receivables materially overdue are a significant fraud/misrepresentation risk. Best practice requires: (1) independent verification, (2) conservative base-case treatment assuming uncollectibility, and (3) escalation to the credit committee. Management rep letters do not protect the bank in fraud scenarios."},
+  {s:"Problem Solving & Judgment",q:"A borrower\u2019s net debt has remained stable at $500M over 3 years, but composition shifted from 80% bank debt / 20% bonds to 30% bank debt / 70% bonds. What is the primary credit implication for your bank?",o:["The shift is neutral; total debt is unchanged and leverage is the same","The bank\u2019s relative seniority has improved as it now holds a smaller share of the capital structure","The bank\u2019s negotiating leverage in a distress scenario has weakened \u2014 a larger bondholder base makes restructuring more complex, creating holdout risk","Bond market access is a positive refinancing signal indicating improved credit quality"],a:2,e:"With 70% of debt in bonds, any restructuring involves a diverse, often adversarial bondholder group that may resist haircuts or hold out. The bank\u2019s ability to quickly negotiate a bilateral solution is significantly diminished."},
+  {s:"Problem Solving & Judgment",q:"Your quantitative model outputs a PD of 1.8% (BB+), but your qualitative assessment identifies significant governance concerns: recent CFO departure, board composition issues, and an ongoing regulatory inquiry. What is the most defensible credit committee recommendation?",o:["Approve at model-indicated terms; qualitative concerns are subjective and not scoreable","Decline the facility entirely until the regulatory inquiry is resolved","Apply a qualitative overlay adjusting the effective rating to BB or lower, reflect this in pricing and structure, and present both views transparently to the committee with enhanced monitoring conditions","Approve the facility but exclude governance concerns from the credit memo to avoid introducing subjectivity"],a:2,e:"Governance risk is a legitimate, material credit factor. Best practice requires a transparent qualitative overlay, adequate pricing for incremental risk, structural protections, and full disclosure to the committee. Excluding governance from the memo would be a professional and compliance failure."},
+  {s:"Advanced & Integrative",q:"A company has EBITDA of $80M and total funded debt of $300M (60% fixed, 40% floating at SOFR+200bps). Current interest expense is $12M. SOFR rises 150bps. Approximately what is the revised interest coverage ratio?",o:["ICR unchanged at 6.7x; fixed-rate majority buffers the full impact","New interest = $12M + ($300M \u00d7 40% \u00d7 1.5%) = $13.8M; revised ICR = 5.8x","New interest = $12M \u00d7 1.015 = $12.18M; revised ICR = 6.6x","New interest = $12M + ($300M \u00d7 1.5%) = $16.5M; revised ICR = 4.8x"],a:1,e:"Only the floating-rate portion reprices: $300M \u00d7 40% = $120M. At +150bps: $120M \u00d7 1.5% = $1.8M additional interest. New interest = $13.8M. Revised ICR = $80M / $13.8M = 5.8x. Option D incorrectly applies the rate move to total debt."},
+  {s:"Advanced & Integrative",q:"RAROC for a proposed credit facility is 8.2% against the bank\u2019s hurdle rate of 11%. The relationship team argues cross-sell revenue from FX hedging and cash management would take RAROC to 12.5%. What is the most rigorous response?",o:["Approve on total relationship RAROC of 12.5%; cross-sell is standard relationship banking practice","Decline as standalone credit RAROC is below hurdle rate","Require cross-sell revenue to be historically evidenced or contractually committed before inclusion; present both standalone and relationship RAROC transparently to the committee","Increase the facility price by 30bps to bring standalone RAROC to hurdle and approve"],a:2,e:"Relationship RAROC is legitimate, but cross-sell revenues are often optimistic projections. Include cross-sell only if historically evidenced or contractually committed. Both scenarios must be presented transparently. Approving on speculative cross-sell that never materializes leaves the bank with a loss-making credit."},
+  {s:"Advanced & Integrative",q:"A portfolio review shows 15% of your corporate credit book concentrated in a single cyclical sector now showing early stress signals (rising DSOs, margin compression, covenant headroom declining). Which portfolio-level action is most appropriate?",o:["Immediately provision 50% of the sector exposure as a precautionary measure","Take no action until individual borrowers breach covenants or request waivers","Conduct a sector-wide stress test, flag exposures with <15% covenant headroom for enhanced monitoring, review sector concentration limits, and adjust pricing on renewals","Transfer all sector exposure to the trading book and hedge with CDS"],a:2,e:"Portfolio management requires proactive action \u2014 not waiting for individual defaults. A sector stress test identifies vulnerabilities early. Enhanced monitoring on thin-headroom credits provides early warning. Sector limits prevent further concentration buildup. Repricing renewals ensures new commitments reflect current risk."}
 ];
 
-const SECTION_COLORS = {
-“Financial Statement Analysis”:   { bg: “#0b1e33”, accent: “#3a9bd5”, dim: “#1a3a5a” },
-“Credit Structuring & Covenants”: { bg: “#1e0d1a”, accent: “#e94580”, dim: “#3a1a2e” },
-“Credit Risk & Ratings”:          { bg: “#0a2418”, accent: “#27ae60”, dim: “#143d25” },
-“Industry & Business Risk”:       { bg: “#1e1200”, accent: “#e67e22”, dim: “#3a2200” },
-“Problem Solving & Judgment”:     { bg: “#120a20”, accent: “#a569bd”, dim: “#2a1840” },
-“Advanced & Integrative”:         { bg: “#061a18”, accent: “#1abc9c”, dim: “#0a3030” },
-};
+// STATE
+var cur=0,ans=new Array(QS.length).fill(null),flg=new Set(),sel=null,rev=false;
+var tLeft=3600,tInt=null,rvIdx=0,tUsed=0;
 
-const LABELS = [“A”,“B”,“C”,“D”];
+// Build domain grid
+(function(){
+  var g=document.getElementById('domain-grid'),h='';
+  for(var k in SC){h+='<div class="domain-row"><div class="domain-dot" style="background:'+SC[k].ac+'"></div><div class="domain-txt">'+k+'</div></div>';}
+  g.innerHTML=h;
+})();
 
-function App() {
-const [phase, setPhase] = useState(“intro”);
-const [current, setCurrent] = useState(0);
-const [answers, setAnswers] = useState(Array(questions.length).fill(null));
-const [selected, setSelected] = useState(null);
-const [revealed, setRevealed] = useState(false);
-const [timeLeft, setTimeLeft] = useState(TOTAL_MINUTES * 60);
-const [flagged, setFlagged] = useState(new Set());
-const [reviewIdx, setReviewIdx] = useState(0);
-const [candidateName, setCandidateName] = useState(””);
-const timerRef = useRef(null);
-const topRef = useRef(null);
-
-useEffect(() => {
-if (phase === “test”) {
-timerRef.current = setInterval(() => {
-setTimeLeft(t => {
-if (t <= 1) { clearInterval(timerRef.current); setPhase(“results”); return 0; }
-return t - 1;
-});
-}, 1000);
+function showScreen(id){
+  var all=['s-intro','s-test','s-results','s-review'];
+  all.forEach(function(x){
+    var el=document.getElementById(x);
+    el.classList.remove('active');
+    el.style.display='none';
+  });
+  var el=document.getElementById(id);
+  if(id==='s-intro'){el.style.display='flex';}else{el.style.display='block';}
+  el.classList.add('active');
+  window.scrollTo(0,0);
 }
-return () => clearInterval(timerRef.current);
-}, [phase]);
 
-useEffect(() => {
-if (topRef.current) topRef.current.scrollIntoView({ behavior: “smooth” });
-}, [current, phase]);
-
-const fmt = s => `${String(Math.floor(s/60)).padStart(2,"0")}:${String(s%60).padStart(2,"0")}`;
-const timerColor = timeLeft < 600 ? “#e74c3c” : timeLeft < 1200 ? “#f39c12” : “#2ecc71”;
-const urgent = timeLeft < 600;
-
-const q = questions[current];
-const sc = SECTION_COLORS[q?.section] || {};
-const score = answers.filter((a,i) => a === questions[i].answer).length;
-const pct = Math.round((score / questions.length) * 100);
-
-const sectionBreakdown = Object.keys(SECTION_COLORS).map(sec => {
-const idxs = questions.map((qq,i) => ({qq,i})).filter(x => x.qq.section === sec);
-const correct = idxs.filter(x => answers[x.i] === questions[x.i].answer).length;
-return { sec, correct, total: idxs.length, pct: Math.round((correct/idxs.length)*100) };
+document.getElementById('btn-start').addEventListener('click',function(){
+  tInt=setInterval(tick,1000);
+  showScreen('s-test');
+  renderQ();
 });
 
-const verdict = () => {
-if (pct >= 85) return { label: “Excellent — Strong Hire”, color: “#27ae60”, detail: “Demonstrated mastery across analytical, structural, and judgment domains.” };
-if (pct >= 70) return { label: “Strong — Proceed to Final Round”, color: “#2980b9”, detail: “Solid technical foundation. Recommend structured interview to probe gap areas.” };
-if (pct >= 55) return { label: “Borderline — Panel Review Required”, color: “#e67e22”, detail: “Mixed performance. Gaps in critical judgment areas require further evaluation.” };
-return { label: “Does Not Meet Bar”, color: “#e74c3c”, detail: “Insufficient proficiency for a senior credit analyst role at this level.” };
-};
+function tick(){
+  tLeft--;tUsed++;
+  var m=Math.floor(tLeft/60),s=tLeft%60;
+  var t=document.getElementById('timer'),d=document.getElementById('tdot');
+  t.textContent=pad(m)+':'+pad(s);
+  var c=tLeft<600?'#e74c3c':tLeft<1200?'#f39c12':'#2ecc71';
+  t.style.color=c;d.style.background=c;d.style.boxShadow='0 0 7px '+c;
+  if(tLeft<600){t.classList.add('urgent');}else{t.classList.remove('urgent');}
+  if(tLeft<=0){clearInterval(tInt);doResults();}
+}
+function pad(n){return String(n).padStart(2,'0');}
 
-const handleConfirm = () => {
-if (selected === null) return;
-const upd = […answers]; upd[current] = selected; setAnswers(upd);
-setRevealed(true);
-};
-
-const handleNext = () => {
-setSelected(null); setRevealed(false);
-if (current < questions.length - 1) { setCurrent(current + 1); }
-else { clearInterval(timerRef.current); setPhase(“results”); }
-};
-
-const handleSkip = () => {
-setSelected(null); setRevealed(false);
-if (current < questions.length - 1) setCurrent(current + 1);
-};
-
-const toggleFlag = () => {
-const nf = new Set(flagged);
-nf.has(current) ? nf.delete(current) : nf.add(current);
-setFlagged(nf);
-};
-
-const jumpTo = (i) => {
-if (revealed) return;
-setCurrent(i); setSelected(answers[i]); setRevealed(false);
-};
-
-// ── SHARED STYLES ──
-const card = (extra={}) => ({
-background: “#0d1825”, border: “1px solid #1a2e45”,
-borderRadius: 14, padding: “24px 22px”, …extra
-});
-
-const btn = (variant=“primary”, extra={}) => {
-const base = { border: “none”, borderRadius: 10, fontSize: 14, fontWeight: 600,
-cursor: “pointer”, padding: “14px 20px”, letterSpacing: “0.05em”,
-fontFamily: “‘Source Serif 4’, Georgia, serif”, transition: “opacity 0.15s”, …extra };
-if (variant === “primary”) return { …base, background: “linear-gradient(135deg,#1a5276,#2980b9)”, color: “#fff” };
-if (variant === “ghost”)   return { …base, background: “none”, border: “1px solid #1e3050”, color: “#607080” };
-if (variant === “accent”)  return { …base, background: sc.accent, color: “#fff” };
-return base;
-};
-
-// ── INTRO ──
-if (phase === “intro”) return (
-<div style={{ minHeight:“100vh”, display:“flex”, alignItems:“center”, justifyContent:“center”, padding:“32px 20px” }}>
-<div style={{ maxWidth:620, width:“100%” }} className=“fade-in”>
-<div style={{ textAlign:“center”, marginBottom:40 }}>
-<h1 style={{ fontFamily:”‘Playfair Display’, Georgia, serif”, fontSize:“clamp(26px,5vw,42px)”, color:”#e8dcc8”, fontWeight:700, lineHeight:1.2, marginBottom:16 }}>
-Corporate Credit Risk<br/>Analyst Assessment
-</h1>
-</div>
-
-```
-    <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:12, marginBottom:32 }}>
-      {[["22","Questions"],["60","Minutes"],["6","Domains"]].map(([v,l]) => (
-        <div key={l} style={{ ...card(), textAlign:"center", padding:"18px 12px" }}>
-          <div style={{ fontFamily:"'Playfair Display',serif", fontSize:32, color:"#3a9bd5", fontWeight:700 }}>{v}</div>
-          <div style={{ fontSize:10, color:"#3a5060", letterSpacing:3, textTransform:"uppercase", marginTop:4 }}>{l}</div>
-        </div>
-      ))}
-    </div>
-
-    <div style={{ ...card(), marginBottom:24 }}>
-      <div style={{ fontSize:10, letterSpacing:4, color:"#4a90a4", textTransform:"uppercase", marginBottom:16 }}>Domains</div>
-      <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:10 }}>
-        {Object.entries(SECTION_COLORS).map(([sec, c]) => (
-          <div key={sec} style={{ display:"flex", alignItems:"center", gap:10 }}>
-            <div style={{ width:8, height:8, borderRadius:"50%", background:c.accent, flexShrink:0 }}/>
-            <span style={{ color:"#7a8c9a", fontSize:13, lineHeight:1.4 }}>{sec}</span>
-          </div>
-        ))}
-      </div>
-    </div>
-
-    <div style={{ ...card({ background:"#070d18", borderColor:"#111e30" }), marginBottom:24 }}>
-      <div style={{ fontSize:10, letterSpacing:4, color:"#4a90a4", textTransform:"uppercase", marginBottom:14 }}>Candidate Details</div>
-      <input
-        type="text"
-        placeholder="Full name (optional)"
-        value={candidateName}
-        onChange={e => setCandidateName(e.target.value)}
-        style={{ width:"100%", background:"#0d1825", border:"1px solid #1a2e45", borderRadius:8,
-          padding:"12px 16px", color:"#e8dcc8", fontSize:14, outline:"none",
-          fontFamily:"'Source Serif 4', Georgia, serif" }}
-      />
-    </div>
-
-    <div style={{ background:"#07111e", border:"1px solid #0f2035", borderRadius:10, padding:"14px 18px", marginBottom:28, color:"#4a6070", fontSize:13, lineHeight:1.65 }}>
-      <strong style={{ color:"#4a90a4" }}>Instructions: </strong>
-      Select the single best answer and confirm before the explanation appears. You may flag questions and return via the navigator. The test auto-submits when time expires.
-    </div>
-
-    <button onClick={() => setPhase("test")} style={{ ...btn("primary"), width:"100%", padding:"17px", fontSize:15, textTransform:"uppercase", letterSpacing:"0.12em" }}>
-      Begin Assessment
-    </button>
-  </div>
-</div>
-```
-
-);
-
-// ── RESULTS ──
-if (phase === “results”) {
-const v = verdict();
-return (
-<div style={{ minHeight:“100vh”, padding:“32px 20px” }} ref={topRef}>
-<div style={{ maxWidth:680, margin:“0 auto” }} className=“fade-in”>
-<div style={{ textAlign:“center”, marginBottom:40 }}>
-<div style={{ fontSize:10, letterSpacing:6, color:”#4a90a4”, textTransform:“uppercase”, marginBottom:16 }}>Assessment Complete</div>
-{candidateName && <div style={{ fontSize:13, color:”#5a7080”, marginBottom:8 }}>{candidateName}</div>}
-<div style={{ fontFamily:”‘Playfair Display’,serif”, fontSize:“clamp(52px,12vw,80px)”, color:v.color, fontWeight:700, lineHeight:1 }}>{pct}<span style={{ fontSize:“0.4em”, color:v.color+“99” }}>%</span></div>
-<div style={{ color:”#5a7080”, fontSize:14, margin:“6px 0 16px” }}>{score} of {questions.length} correct</div>
-<div style={{ display:“inline-block”, padding:“10px 28px”, background:v.color+“18”, border:`1px solid ${v.color}55`, borderRadius:40, color:v.color, fontSize:14, fontWeight:700, letterSpacing:“0.06em” }}>{v.label}</div>
-<p style={{ color:”#506070”, fontSize:13, maxWidth:440, margin:“12px auto 0”, lineHeight:1.65 }}>{v.detail}</p>
-</div>
-
-```
-      <div style={{ ...card(), marginBottom:20 }}>
-        <div style={{ fontSize:10, letterSpacing:4, color:"#4a90a4", textTransform:"uppercase", marginBottom:22 }}>Performance by Domain</div>
-        {sectionBreakdown.map(({ sec, correct, total, pct: sp }) => {
-          const c = SECTION_COLORS[sec];
-          return (
-            <div key={sec} style={{ marginBottom:18 }}>
-              <div style={{ display:"flex", justifyContent:"space-between", marginBottom:7 }}>
-                <span style={{ color:"#7a8c9a", fontSize:13 }}>{sec}</span>
-                <span style={{ color:c.accent, fontSize:13, fontWeight:700 }}>{correct}/{total} &nbsp;<span style={{ color:c.accent+"77", fontWeight:400 }}>({sp}%)</span></span>
-              </div>
-              <div style={{ height:5, background:"#0f1e2e", borderRadius:3, overflow:"hidden" }}>
-                <div style={{ height:"100%", width:`${sp}%`, background:c.accent, borderRadius:3 }}/>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-
-      <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12, marginBottom:24 }}>
-        <div style={{ ...card({ padding:"16px 18px" }) }}>
-          <div style={{ fontSize:10, letterSpacing:3, color:"#3a5060", textTransform:"uppercase", marginBottom:6 }}>Time Used</div>
-          <div style={{ fontFamily:"'Playfair Display',serif", fontSize:24, color:"#e8dcc8" }}>{fmt(TOTAL_MINUTES*60 - timeLeft)}</div>
-        </div>
-        <div style={{ ...card({ padding:"16px 18px" }) }}>
-          <div style={{ fontSize:10, letterSpacing:3, color:"#3a5060", textTransform:"uppercase", marginBottom:6 }}>Unanswered</div>
-          <div style={{ fontFamily:"'Playfair Display',serif", fontSize:24, color:"#e8dcc8" }}>{answers.filter(a=>a===null).length}</div>
-        </div>
-      </div>
-
-      <button onClick={() => { setReviewIdx(0); setPhase("review"); }}
-        style={{ ...btn("ghost"), width:"100%", padding:"15px", fontSize:14, textTransform:"uppercase", letterSpacing:"0.08em" }}>
-        Review All Answers & Explanations
-      </button>
-    </div>
-  </div>
-);
-```
-
+function renderQ(){
+  var q=QS[cur],sc=SC[q.s];
+  // Q card
+  var qc=document.getElementById('q-card');
+  qc.style.background=sc.bg;qc.style.borderColor=sc.ac+'66';
+  var ql=document.getElementById('q-sec');
+  ql.textContent=q.s;ql.style.color=sc.ac;
+  document.getElementById('q-text').textContent=q.q;
+  // Flag btn
+  var fb=document.getElementById('flag-btn');
+  if(flg.has(cur)){fb.innerHTML='&#9873; Flagged';fb.style.background=sc.ac+'22';fb.style.borderColor=sc.ac;fb.style.color=sc.ac;}
+  else{fb.innerHTML='&#9872; Flag';fb.style.background='none';fb.style.borderColor='#2a3a4a';fb.style.color='#3a5060';}
+  // Options
+  var op=document.getElementById('options');op.innerHTML='';
+  q.o.forEach(function(opt,i){
+    var d=document.createElement('div');
+    d.className='opt';d.dataset.i=i;
+    var lbl=LB[i];
+    if(rev){
+      if(i===q.a){d.style.background='#0a2a18';d.style.borderColor='#27ae60';lbl='&#10003;';}
+      else if(i===ans[cur]&&ans[cur]!==q.a){d.style.background='#260a0a';d.style.borderColor='#e74c3c';lbl='&#10007;';}
+    }else if(ans[cur]===i){
+      d.style.background=sc.bg;d.style.borderColor=sc.ac;
+    }
+    d.innerHTML='<div class="opt-lbl">'+lbl+'</div><span class="opt-txt">'+opt+'</span>';
+    if(rev){
+      if(i===q.a){d.querySelector('.opt-lbl').style.color='#2ecc71';d.querySelector('.opt-lbl').style.borderColor='#27ae60';d.querySelector('.opt-txt').style.color='#2ecc71';}
+      else if(i===ans[cur]&&ans[cur]!==q.a){d.querySelector('.opt-lbl').style.color='#e74c3c';d.querySelector('.opt-lbl').style.borderColor='#e74c3c';d.querySelector('.opt-txt').style.color='#e74c3c';}
+    }else if(ans[cur]===i){
+      d.querySelector('.opt-lbl').style.color=sc.ac;d.querySelector('.opt-lbl').style.borderColor=sc.ac;d.querySelector('.opt-txt').style.color='#e8dcc8';
+    }
+    if(!rev)d.addEventListener('click',function(){selectOpt(parseInt(this.dataset.i));});
+    op.appendChild(d);
+  });
+  // Expl
+  var ex=document.getElementById('expl');
+  if(rev){
+    ex.style.display='block';ex.style.background=sc.bg;ex.style.borderColor=sc.ac+'44';
+    document.getElementById('expl-lbl').textContent='Explanation';document.getElementById('expl-lbl').style.color=sc.ac;
+    document.getElementById('expl-txt').textContent=q.e;
+  }else{ex.style.display='none';}
+  // Btns
+  sel=ans[cur];
+  var bs=document.getElementById('btn-skip'),bc=document.getElementById('btn-confirm'),bn=document.getElementById('btn-next');
+  if(rev){bs.style.display='none';bc.style.display='none';bn.style.display='block';bn.textContent=cur<QS.length-1?'Next Question \u2192':'Submit Test';}
+  else{bs.style.display='block';bc.style.display='block';bn.style.display='none';bc.disabled=sel===null;}
+  // Topbar
+  document.getElementById('tb-n').textContent=cur+1;
+  document.getElementById('pb-fill').style.width=((cur/QS.length)*100)+'%';
+  document.getElementById('tb-done').textContent=ans.filter(function(a){return a!==null;}).length+' done';
+  renderNav();
 }
 
-// ── REVIEW ──
-if (phase === “review”) {
-const rq = questions[reviewIdx];
-const rc = SECTION_COLORS[rq.section];
-const userAns = answers[reviewIdx];
-const isCorrect = userAns === rq.answer;
-return (
-<div style={{ minHeight:“100vh”, padding:“24px 20px 60px” }} ref={topRef}>
-<div style={{ maxWidth:700, margin:“0 auto” }} className=“fade-in”>
-<div style={{ display:“flex”, justifyContent:“space-between”, alignItems:“center”, marginBottom:24, gap:12 }}>
-<button onClick={() => setPhase(“results”)} style={{ …btn(“ghost”), padding:“9px 16px”, fontSize:13 }}>← Results</button>
-<span style={{ color:”#3a5060”, fontSize:13, flexShrink:0 }}>Q{reviewIdx+1} / {questions.length}</span>
-<div style={{ display:“flex”, gap:8 }}>
-<button onClick={() => setReviewIdx(Math.max(0,reviewIdx-1))} disabled={reviewIdx===0}
-style={{ …btn(“ghost”), width:38, height:38, padding:0, fontSize:18, opacity:reviewIdx===0?0.3:1 }}>‹</button>
-<button onClick={() => setReviewIdx(Math.min(questions.length-1,reviewIdx+1))} disabled={reviewIdx===questions.length-1}
-style={{ …btn(“ghost”), width:38, height:38, padding:0, fontSize:18, opacity:reviewIdx===questions.length-1?0.3:1 }}>›</button>
-</div>
-</div>
-
-```
-      <div style={{ background:rc.bg, border:`1px solid ${rc.accent}44`, borderRadius:14, padding:"22px 22px", marginBottom:18 }}>
-        <div style={{ fontSize:10, letterSpacing:4, color:rc.accent, textTransform:"uppercase", marginBottom:12 }}>{rq.section}</div>
-        <p style={{ color:"#e8dcc8", fontSize:15, lineHeight:1.75, margin:0 }}>{rq.q}</p>
-      </div>
-
-      <div style={{ display:"flex", flexDirection:"column", gap:10, marginBottom:18 }}>
-        {rq.options.map((opt,i) => {
-          const isAns = i === rq.answer;
-          const isUser = i === userAns;
-          let bg = "#0d1825", border = "#1a2e45", color = "#607080";
-          if (isAns) { bg="#0d3025"; border="#27ae60"; color="#2ecc71"; }
-          else if (isUser && !isCorrect) { bg="#2a0d0d"; border="#e74c3c"; color="#e74c3c"; }
-          return (
-            <div key={i} style={{ background:bg, border:`1px solid ${border}`, borderRadius:11, padding:"14px 18px", display:"flex", gap:14, alignItems:"flex-start" }}>
-              <div style={{ width:24, height:24, borderRadius:"50%", border:`1.5px solid ${border}`, display:"flex", alignItems:"center", justifyContent:"center", color, fontSize:11, flexShrink:0, fontWeight:700 }}>
-                {isAns ? "✓" : isUser ? "✗" : LABELS[i]}
-              </div>
-              <span style={{ color, fontSize:14, lineHeight:1.65, paddingTop:1 }}>{opt}</span>
-            </div>
-          );
-        })}
-      </div>
-
-      {userAns === null && (
-        <div style={{ background:"#181200", border:"1px solid #3a2800", borderRadius:8, padding:"11px 16px", marginBottom:14, color:"#a07800", fontSize:13 }}>
-          ⚠ This question was not answered.
-        </div>
-      )}
-
-      <div style={{ background:rc.bg, border:`1px solid ${rc.accent}33`, borderRadius:12, padding:"18px 20px" }}>
-        <div style={{ fontSize:10, letterSpacing:3, color:rc.accent, textTransform:"uppercase", marginBottom:10 }}>Explanation</div>
-        <p style={{ color:"#7a8c9a", fontSize:14, lineHeight:1.8, margin:0 }}>{rq.explanation}</p>
-      </div>
-
-      {/* mini navigator */}
-      <div style={{ marginTop:28, display:"flex", flexWrap:"wrap", gap:7 }}>
-        {questions.map((_,i) => {
-          const ans = answers[i]; const correct = ans === questions[i].answer;
-          const isCur = i === reviewIdx;
-          let bg="#0d1825", border="#1a2e45", color="#3a5060";
-          if (isCur) { border="#3a9bd5"; color="#3a9bd5"; }
-          else if (ans === null) { }
-          else if (correct) { bg="#0a2018"; border="#27ae60"; color="#27ae60"; }
-          else { bg="#200a0a"; border="#e74c3c"; color="#e74c3c"; }
-          return (
-            <button key={i} onClick={() => setReviewIdx(i)}
-              style={{ width:34, height:34, borderRadius:7, border:`1px solid ${border}`, background:bg, color, fontSize:11, fontWeight:700, cursor:"pointer", fontFamily:"'Source Serif 4',serif" }}>
-              {i+1}
-            </button>
-          );
-        })}
-      </div>
-    </div>
-  </div>
-);
-```
-
+function selectOpt(i){
+  if(rev)return;sel=i;
+  var q=QS[cur],sc=SC[q.s];
+  document.querySelectorAll('.opt').forEach(function(el,idx){
+    el.style.background='#0a1420';el.style.borderColor='#162030';
+    el.querySelector('.opt-lbl').style.color='#6a8090';el.querySelector('.opt-lbl').style.borderColor='#162030';
+    el.querySelector('.opt-txt').style.color='#6a8090';
+    if(idx===i){el.style.background=sc.bg;el.style.borderColor=sc.ac;el.querySelector('.opt-lbl').style.color=sc.ac;el.querySelector('.opt-lbl').style.borderColor=sc.ac;el.querySelector('.opt-txt').style.color='#e8dcc8';}
+  });
+  document.getElementById('btn-confirm').disabled=false;
 }
 
-// ── MAIN TEST ──
-const progress = (current / questions.length) * 100;
-const answered = answers.filter(a => a !== null).length;
+function confirmAns(){
+  if(sel===null)return;
+  ans[cur]=sel;rev=true;renderQ();
+}
+function skipQ(){sel=null;rev=false;if(cur<QS.length-1){cur++;renderQ();}}
+function nextQ(){sel=null;rev=false;if(cur<QS.length-1){cur++;renderQ();}else{clearInterval(tInt);doResults();}}
+function toggleFlag(){if(flg.has(cur))flg.delete(cur);else flg.add(cur);renderQ();}
 
-return (
-<div style={{ minHeight:“100vh” }}>
-{/* Sticky header */}
-<div style={{ position:“sticky”, top:0, zIndex:100, background:”#04080f”, borderBottom:“1px solid #0f1e2e”, padding:“11px 20px”, display:“flex”, alignItems:“center”, justifyContent:“space-between”, gap:12 }}>
-<div style={{ display:“flex”, alignItems:“center”, gap:14, flex:1, minWidth:0 }}>
-<span style={{ color:”#3a9bd5”, fontSize:12, letterSpacing:2, flexShrink:0 }}>
-Q{current+1}<span style={{ color:”#1a3040” }}>/{questions.length}</span>
-</span>
-<div style={{ flex:1, height:4, background:”#0f1e2e”, borderRadius:2, overflow:“hidden”, maxWidth:200 }}>
-<div style={{ height:“100%”, width:`${progress}%`, background:“linear-gradient(90deg,#3a9bd5,#27ae60)”, borderRadius:2 }}/>
-</div>
-<span style={{ color:”#1a4030”, fontSize:11, flexShrink:0 }}>{answered} done</span>
-</div>
-<div style={{ display:“flex”, alignItems:“center”, gap:7, flexShrink:0 }}>
-<div style={{ width:7, height:7, borderRadius:“50%”, background:timerColor, boxShadow:`0 0 7px ${timerColor}` }}/>
-<span className={urgent ? “timer-urgent” : “”}
-style={{ color:timerColor, fontFamily:”‘Courier New’,monospace”, fontSize:“clamp(15px,4vw,20px)”, fontWeight:700, letterSpacing:2 }}>
-{fmt(timeLeft)}
-</span>
-</div>
-</div>
-
-```
-  <div style={{ maxWidth:740, margin:"0 auto", padding:"28px 18px 100px" }} ref={topRef}>
-    {/* Question card */}
-    <div style={{ background:sc.bg, border:`1px solid ${sc.accent}44`, borderRadius:14, padding:"22px 20px", marginBottom:20 }} className="fade-in">
-      <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:14, gap:12 }}>
-        <div style={{ fontSize:10, letterSpacing:4, color:sc.accent, textTransform:"uppercase" }}>{q.section}</div>
-        <button onClick={toggleFlag}
-          style={{ background:flagged.has(current)?sc.accent+"22":"none", border:`1px solid ${flagged.has(current)?sc.accent:"#2a3a4a"}`,
-            color:flagged.has(current)?sc.accent:"#3a5060", padding:"4px 12px", borderRadius:20, fontSize:11, cursor:"pointer",
-            fontFamily:"'Source Serif 4',serif", letterSpacing:1, flexShrink:0 }}>
-          {flagged.has(current) ? "⚑ Flagged" : "⚐ Flag"}
-        </button>
-      </div>
-      <p style={{ color:"#e0d4c0", fontSize:"clamp(14px,2.5vw,16px)", lineHeight:1.78, margin:0 }}>{q.q}</p>
-    </div>
-
-    {/* Options */}
-    <div style={{ display:"flex", flexDirection:"column", gap:11, marginBottom:22 }}>
-      {q.options.map((opt,i) => {
-        let bg="#0a1420", border="#162030", color="#6a8090", cursor="pointer";
-        if (!revealed && selected===i) { bg=sc.bg; border=sc.accent; color="#e8dcc8"; }
-        if (revealed) {
-          if (i===q.answer) { bg="#0a2a18"; border="#27ae60"; color="#2ecc71"; }
-          else if (i===selected && selected!==q.answer) { bg="#260a0a"; border="#e74c3c"; color="#e74c3c"; }
-          cursor="default";
-        }
-        return (
-          <div key={i} onClick={() => { if(!revealed){ setSelected(i); } }}
-            style={{ background:bg, border:`1px solid ${border}`, borderRadius:12,
-              padding:"15px 18px", display:"flex", gap:14, alignItems:"flex-start",
-              cursor, transition:"border-color 0.15s, background 0.15s", WebkitTapHighlightColor:"transparent" }}>
-            <div style={{ width:26, height:26, borderRadius:"50%", border:`1.5px solid ${border}`,
-              display:"flex", alignItems:"center", justifyContent:"center", color, fontSize:11, flexShrink:0, fontWeight:700 }}>
-              {revealed && i===q.answer ? "✓" : revealed && i===selected && selected!==q.answer ? "✗" : LABELS[i]}
-            </div>
-            <span style={{ color, fontSize:"clamp(13px,2.2vw,14px)", lineHeight:1.68, paddingTop:3 }}>{opt}</span>
-          </div>
-        );
-      })}
-    </div>
-
-    {/* Explanation */}
-    {revealed && (
-      <div style={{ background:sc.bg, border:`1px solid ${sc.accent}33`, borderRadius:12, padding:"18px 20px", marginBottom:20 }} className="fade-in">
-        <div style={{ fontSize:10, letterSpacing:3, color:sc.accent, textTransform:"uppercase", marginBottom:10 }}>Explanation</div>
-        <p style={{ color:"#7a8c9a", fontSize:14, lineHeight:1.82, margin:0 }}>{q.explanation}</p>
-      </div>
-    )}
-
-    {/* Action buttons */}
-    <div style={{ display:"flex", gap:11 }}>
-      {!revealed ? (
-        <>
-          <button onClick={handleSkip} style={{ ...btn("ghost"), flex:1, textAlign:"center" }}>Skip →</button>
-          <button onClick={handleConfirm} disabled={selected===null}
-            style={{ ...btn("primary"), flex:2, opacity:selected===null?0.4:1, cursor:selected===null?"default":"pointer",
-              textTransform:"uppercase", letterSpacing:"0.1em" }}>
-            Confirm Answer
-          </button>
-        </>
-      ) : (
-        <button onClick={handleNext}
-          style={{ ...btn("primary"), flex:1, textTransform:"uppercase", letterSpacing:"0.1em" }}>
-          {current < questions.length-1 ? "Next Question →" : "Submit Test"}
-        </button>
-      )}
-    </div>
-
-    {/* Navigator */}
-    <div style={{ marginTop:36, paddingTop:24, borderTop:"1px solid #0f1e2e" }}>
-      <div style={{ fontSize:10, letterSpacing:3, color:"#1e3040", textTransform:"uppercase", marginBottom:14 }}>Navigator</div>
-      <div style={{ display:"flex", flexWrap:"wrap", gap:7 }}>
-        {questions.map((_,i) => {
-          const isAns = answers[i] !== null;
-          const isCur = i === current;
-          const isFlg = flagged.has(i);
-          let bg="#0a1420", border="#0f1e2e", color="#2a4050";
-          if (isCur)      { bg="#0f2942"; border="#3a9bd5"; color="#3a9bd5"; }
-          else if (isFlg) { bg="#1e1000"; border="#e67e22"; color="#e67e22"; }
-          else if (isAns) { bg="#0a2018"; border="#27ae60"; color="#27ae60"; }
-          return (
-            <button key={i} onClick={() => jumpTo(i)}
-              style={{ width:34, height:34, borderRadius:7, border:`1px solid ${border}`, background:bg, color,
-                fontSize:11, fontWeight:700, cursor:"pointer", fontFamily:"'Source Serif 4',serif" }}>
-              {i+1}
-            </button>
-          );
-        })}
-      </div>
-      <div style={{ display:"flex", flexWrap:"wrap", gap:16, marginTop:12 }}>
-        {[["#27ae60","Answered"],["#e67e22","Flagged"],["#3a9bd5","Current"],["#0f1e2e","Unanswered"]].map(([c,l])=>(
-          <div key={l} style={{ display:"flex", alignItems:"center", gap:6 }}>
-            <div style={{ width:9, height:9, borderRadius:3, background:c }}/>
-            <span style={{ color:"#2a4050", fontSize:11 }}>{l}</span>
-          </div>
-        ))}
-      </div>
-    </div>
-  </div>
-</div>
-```
-
-);
+function renderNav(){
+  var g=document.getElementById('nav-btns');g.innerHTML='';
+  QS.forEach(function(_,i){
+    var b=document.createElement('button');b.className='nb';b.textContent=i+1;
+    if(i===cur)b.classList.add('cur');
+    else if(flg.has(i))b.classList.add('flg');
+    else if(ans[i]!==null)b.classList.add('ans');
+    b.addEventListener('click',(function(idx){return function(){if(!rev){cur=idx;sel=ans[idx];rev=false;renderQ();window.scrollTo(0,0);}}})(i));
+    g.appendChild(b);
+  });
 }
 
-const root = ReactDOM.createRoot(document.getElementById(“root”));
-root.render(React.createElement(App));
+function doResults(){
+  clearInterval(tInt);
+  var score=ans.filter(function(a,i){return a===QS[i].a;}).length;
+  var pct=Math.round((score/QS.length)*100);
+  var name=document.getElementById('cname').value.trim();
+  var mu=Math.floor(tUsed/60),ms=tUsed%60;
+  var vl,vc,vd;
+  if(pct>=85){vl='Excellent \u2014 Strong Hire';vc='#27ae60';vd='Demonstrated mastery across analytical, structural, and judgment domains.';}
+  else if(pct>=70){vl='Strong \u2014 Proceed to Final Round';vc='#2980b9';vd='Solid technical foundation. Recommend structured interview to probe gap areas.';}
+  else if(pct>=55){vl='Borderline \u2014 Panel Review Required';vc='#e67e22';vd='Mixed performance. Gaps in critical judgment areas require further evaluation.';}
+  else{vl='Does Not Meet Bar';vc='#e74c3c';vd='Insufficient proficiency for a senior credit analyst role at this level.';}
+  if(name)document.getElementById('r-name').textContent=name;
+  var rs=document.getElementById('r-score');rs.textContent=pct+'%';rs.style.color=vc;
+  document.getElementById('r-out').textContent=score+' of '+QS.length+' correct';
+  var rv=document.getElementById('r-verdict');rv.textContent=vl;rv.style.color=vc;rv.style.background=vc+'18';rv.style.borderColor=vc+'55';
+  document.getElementById('r-detail').textContent=vd;
+  document.getElementById('r-time').textContent=pad(mu)+':'+pad(ms);
+  document.getElementById('r-unanswered').textContent=ans.filter(function(a){return a===null;}).length;
+  var bars=document.getElementById('r-bars');bars.innerHTML='';
+  for(var k in SC){
+    var sc=SC[k],qs=QS.map(function(q,i){return{q:q,i:i};}).filter(function(x){return x.q.s===k;});
+    var correct=qs.filter(function(x){return ans[x.i]===QS[x.i].a;}).length;
+    var sp=Math.round((correct/qs.length)*100);
+    bars.innerHTML+='<div class="domain-bar-row" style="margin-bottom:18px"><div style="display:flex;justify-content:space-between;margin-bottom:7px"><span style="color:#7a8c9a;font-size:13px">'+k+'</span><span style="color:'+sc.ac+';font-size:13px;font-weight:700">'+correct+'/'+qs.length+' ('+sp+'%)</span></div><div style="height:5px;background:#0f1e2e;border-radius:3px;overflow:hidden"><div style="height:100%;width:'+sp+'%;background:'+sc.ac+';border-radius:3px"></div></div></div>';
+  }
+  showScreen('s-results');
+}
+
+function goReview(){rvIdx=0;renderReview();showScreen('s-review');}
+function showResults(){showScreen('s-results');}
+
+function renderReview(){
+  var q=QS[rvIdx],sc=SC[q.s],ua=ans[rvIdx],ic=ua===q.a;
+  document.getElementById('rv-pos').textContent='Q'+(rvIdx+1)+' / '+QS.length;
+  var rc=document.getElementById('rv-qcard');rc.style.background=sc.bg;rc.style.borderColor=sc.ac+'55';
+  var rsl=document.getElementById('rv-sec');rsl.textContent=q.s;rsl.style.color=sc.ac;
+  document.getElementById('rv-q').textContent=q.q;
+  var ro=document.getElementById('rv-opts');ro.innerHTML='';
+  q.o.forEach(function(opt,i){
+    var isA=i===q.a,isU=i===ua,cls='neu',lblCls='neu',lblTxt=LB[i];
+    if(isA){cls='ok';lblCls='ok';lblTxt='&#10003;';}
+    else if(isU&&!ic){cls='bad';lblCls='bad';lblTxt='&#10007;';}
+    ro.innerHTML+='<div class="rvo '+cls+'"><div class="rvo-lbl '+lblCls+'">'+lblTxt+'</div><span class="rvo-txt '+cls+'">'+opt+'</span></div>';
+  });
+  document.getElementById('rv-skip-note').style.display=ua===null?'block':'none';
+  var re=document.getElementById('rv-expl');re.style.background=sc.bg;re.style.borderColor=sc.ac+'33';
+  var rel=document.getElementById('rv-expl-lbl');rel.textContent='Explanation';rel.style.color=sc.ac;
+  document.getElementById('rv-expl-txt').textContent=q.e;
+  document.getElementById('rv-prev').style.opacity=rvIdx===0?'0.3':'1';
+  document.getElementById('rv-nxt').style.opacity=rvIdx===QS.length-1?'0.3':'1';
+  var mn=document.getElementById('rv-mini');mn.innerHTML='';
+  QS.forEach(function(_,i){
+    var a=ans[i],ok=a===QS[i].a,isc=i===rvIdx,cls='skip';
+    if(isc)cls='cur';else if(a!==null&&ok)cls='ok';else if(a!==null)cls='bad';
+    var b=document.createElement('button');b.className='rm '+cls;b.textContent=i+1;
+    b.addEventListener('click',(function(idx){return function(){rvIdx=idx;renderReview();window.scrollTo(0,0);};})(i));
+    mn.appendChild(b);
+  });
+  window.scrollTo(0,0);
+}
+function rvPrev(){if(rvIdx>0){rvIdx--;renderReview();}}
+function rvNext(){if(rvIdx<QS.length-1){rvIdx++;renderReview();}}
 </script>
 
 </body>
